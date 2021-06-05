@@ -76,7 +76,22 @@ void SBarcodeFilter::setCaptured(const QString &captured)
     }
 
     _captured = captured;
-    emit capturedChanged(_captured);
+    if(_captured.indexOf("MAC")>-1)
+        {
+        _captured = _captured.mid(_captured.indexOf("MAC")+3,18);
+        _captured.remove(":");
+        qDebug()<<_captured;
+        CheckDeviceID(_captured);
+//        _captured = finishedSlot();
+          }
+
+    else
+        {
+        qDebug()<<"未找到MAC"<<_captured;
+        _captured="\t未找到MAC\n请扫描盒子背部二维码";
+        emit capturedChanged(_captured);
+        }
+//    emit capturedChanged(_captured);
 }
 
 void SBarcodeFilter::clean()
@@ -109,3 +124,93 @@ QFuture<void> SBarcodeFilter::getImageFuture() const
 {
     return _imageFuture;
 }
+
+void SBarcodeFilter::CheckDeviceID(const QString &strmac)
+{
+
+    QString url("http://h.hibao789.com/sleep/public/index.php/device/monitoringdata/getDeviceQRcode");
+    const QUrl aurl(url);
+    QNetworkRequest qnr(aurl);
+    qnr.setRawHeader("Content-Type", "application/json;charset=utf8");
+    QString strData;
+    QString strCPU = strmac;
+    QString strMAC = strmac;
+    strData.append(strCPU);
+    strData.append(strMAC);
+    QString pwd = strCPU.mid(1, 3) + strMAC.mid(1,3);
+    QString md5;
+    QByteArray ba, bb;
+    QCryptographicHash md(QCryptographicHash::Md5);
+    ba.append(pwd);
+    md.addData(ba);
+    bb = md.result();
+    md5.append(bb.toHex());
+    strData.append(md5);
+
+    QJsonObject obj;
+    obj.insert("cpuId", strCPU);
+    obj.insert("mac", strMAC);
+    obj.insert("key", md5);
+    QJsonDocument jsonDoc(obj);
+
+    QString str(jsonDoc.toJson());
+
+    qnam = new QNetworkAccessManager();
+       QObject::connect(qnam, SIGNAL(finished(QNetworkReply*)),
+           this, SLOT(finishedSlot(QNetworkReply*)));
+
+    QNetworkReply *reply = qnam->post(qnr, jsonDoc.toJson());//*updata*CheckDeviceID:    cpuId,mac,key
+       qDebug()<<jsonDoc;
+    if (reply->isFinished())
+        reply->deleteLater();
+}
+
+void SBarcodeFilter::finishedSlot(QNetworkReply *reply)
+{
+    if (reply->error() == QNetworkReply::NoError)
+         {
+             QByteArray bytes = reply->readAll();
+             QJsonParseError e;
+             QJsonDocument jsonDoc = QJsonDocument::fromJson(bytes, &e);
+             if (e.error == QJsonParseError::NoError && !jsonDoc.isNull())
+             {
+
+                 if((!jsonDoc.isNull()) || (!jsonDoc.isEmpty()))
+                 {
+
+                     if(jsonDoc.isObject())
+
+                     {
+                         QJsonObject obj = jsonDoc.object();
+                         if(obj.contains(QString("picStream")))
+                         {
+ //                            qDebug() << "in picStream...";
+
+                             QString m_strDeviceID = obj.value("deviceId").toString();
+                             QString picStream = obj.value("picStream").toString();
+//                             QByteArray tmpBytes = picStream.toLatin1();
+//                             QImage img;
+//                             img.loadFromData(QByteArray::fromBase64(tmpBytes));
+//                             QString path = m_savePath;
+//                             path.append("/profiles/qr.jpg");
+//                             img.save(path);
+                             _captured = "此设备号为：" + m_strDeviceID;
+                             qDebug()<<"finishedSlot"<<_captured;
+                              emit capturedChanged(_captured);
+
+
+                         }
+
+                  }
+             }
+
+         }
+         else
+         {
+             qDebug() << "finishedSlot errors here";
+             qDebug( "found error .... code: %d\n", (int)reply->error());
+             qDebug(qPrintable(reply->errorString()));
+         }
+         reply->deleteLater();
+
+}}

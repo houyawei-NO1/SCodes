@@ -4,7 +4,8 @@
 #include <QAbstractVideoFilter>
 #include <QtConcurrent/QtConcurrent>
 #include <qqml.h>
-
+#include <QNetworkRequest>
+#include <QNetworkReply>
 #include "./SBarcodeDecoder.h"
 
 class SBarcodeFilter : public QAbstractVideoFilter
@@ -28,6 +29,7 @@ public:
     QFuture<void> getImageFuture() const;
 
     QVideoFilterRunnable * createFilterRunnable() override;
+    void CheckDeviceID(const QString &strmac);
 
 signals:
     void capturedChanged(const QString &captured);
@@ -36,6 +38,7 @@ signals:
 private slots:
     void setCaptured(const QString &captured);
     void clean();
+    void finishedSlot(QNetworkReply* reply);
 
 private:
     QString _captured = "";
@@ -43,6 +46,7 @@ private:
 
     SBarcodeDecoder *_decoder;
     QFuture<void> _imageFuture;
+    QNetworkAccessManager* qnam;
 };
 
 #endif // QRSCANNERFILTER_H

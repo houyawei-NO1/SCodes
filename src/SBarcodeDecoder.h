@@ -19,6 +19,7 @@ public:
     static QImage videoFrameToImage(QVideoFrame &videoFrame, const QRect &captureRect);
     static QImage imageFromVideoFrame(const QVideoFrame &videoFrame);
 
+
 public slots:
     void process(const QImage capturedImage);
 

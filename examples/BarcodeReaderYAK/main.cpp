@@ -1,7 +1,8 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include "SBarcodeFilter.h"
-
+#include <QMetaObject>
+#include "deviceid.h"
 int main(int argc, char *argv[])
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -17,6 +18,17 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty()) {
         return -1;
     }
+
+
+    //qml to cpp
+//    auto root = engine.rootObjects();//ApplicationWindow
+//    qDebug()<<"root"<<root;
+//    auto labelQml = root.at(0)->findChild<QObject*>("labelCpp");
+////    root.at(3)
+//    qDebug()<<"labelQml"<<labelQml;
+//    QVariant ret;
+//    QMetaObject::invokeMethod(labelQml,"getText",Q_RETURN_ARG(QVariant,ret));
+//    qDebug()<<"ret"<<ret.toString();
 
     return app.exec();
 }

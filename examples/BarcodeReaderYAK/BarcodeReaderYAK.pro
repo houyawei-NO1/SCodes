@@ -5,6 +5,7 @@ QT += quick
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
+    deviceid.cpp \
     main.cpp
 
 RESOURCES += qml.qrc
@@ -29,4 +30,7 @@ android {
 
     ANDROID_ABIS = armeabi-v7a
 }
+
+HEADERS += \
+    deviceid.h
 

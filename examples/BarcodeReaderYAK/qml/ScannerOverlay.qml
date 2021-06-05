@@ -1,4 +1,4 @@
-import QtQuick 2.12
+ import QtQuick 2.12
 import QtGraphicalEffects 1.12
 
 
@@ -20,8 +20,8 @@ Item {
         left: parent.left
       }
 
-      width: 20
-      height: 5
+      width: 120
+      height: 10
       color: "#218165"
       radius: height / 2
     }
@@ -33,7 +33,7 @@ Item {
       }
 
       width: 5
-      height: 20
+      height: 120
       color: "#218165"
       radius: width / 2
     }
@@ -45,8 +45,8 @@ Item {
         left: parent.left
       }
 
-      width: 20
-      height: 5
+      width: 120
+      height: 10
       color: "#218165"
       radius: height / 2
     }
@@ -58,7 +58,7 @@ Item {
       }
 
       width: 5
-      height: 20
+      height: 120
       color: "#218165"
       radius: width / 2
     }
@@ -70,8 +70,8 @@ Item {
         right: parent.right
       }
 
-      width: 20
-      height: 5
+      width: 120
+      height: 10
       color: "#218165"
       radius: height / 2
     }
@@ -83,7 +83,7 @@ Item {
       }
 
       width: 5
-      height: 20
+      height: 120
       color: "#218165"
       radius: width / 2
     }
@@ -95,8 +95,8 @@ Item {
         right: parent.right
       }
 
-      width: 20
-      height: 5
+      width: 120
+      height: 10
       color: "#218165"
       radius: height / 2
     }
@@ -108,7 +108,7 @@ Item {
       }
 
       width: 5
-      height: 20
+      height: 120
       color: "#218165"
       radius: width / 2
     }
@@ -152,7 +152,7 @@ Item {
 
         anchors.centerIn: scanIndicator
 
-        width: scanIndicator.width / 2
+        width: scanIndicator.width
         height: scanIndicator.height
 
         glowRadius: 50
@@ -170,8 +170,9 @@ Item {
       horizontalCenter: captureZoneCorners.horizontalCenter
     }
 
-    text: qsTr("Scan barcode")
+    text: qsTr("扫描盒子背部二维码")
     color: "#218165"
+    font.pixelSize: 20
   }
 
   onCaptureRectChanged: {

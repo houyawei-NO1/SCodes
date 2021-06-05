@@ -30,7 +30,7 @@ ApplicationWindow {
 
     onSourceRectChanged: {
       barcodeFilter.captureRect = videoOutput.mapRectToSource(
-            videoOutput.mapNormalizedRectToItem(Qt.rect(0.25, 0.25, 0.5, 0.5)))
+            videoOutput.mapNormalizedRectToItem(Qt.rect(0.2, 0, 0.5, 1)))
     }
 
     ScannerOverlay {
@@ -58,8 +58,7 @@ ApplicationWindow {
 
     // you can adjust capture rect (scan area) ne changing these Qt.rect() parameters
     captureRect: videoOutput.mapRectToSource(
-                   videoOutput.mapNormalizedRectToItem(Qt.rect(0.25, 0.25,
-                                                               0.5, 0.5)))
+                   videoOutput.mapNormalizedRectToItem(Qt.rect(0.2, 0, 0.5, 1)))
 
     onCapturedChanged: {
       active = false
@@ -70,19 +69,21 @@ ApplicationWindow {
   Rectangle {
     anchors.fill: parent
     visible: !barcodeFilter.active
-
     Column {
       anchors.centerIn: parent
       spacing: 20
 
       Text {
         anchors.horizontalCenter: parent.horizontalCenter
-        text: barcodeFilter.captured
+        text:  barcodeFilter.captured
+        font.pixelSize: 30
       }
 
       Button {
         anchors.horizontalCenter: parent.horizontalCenter
-        text: qsTr("Scan again")
+//        text: qsTr("扫描下一个二维码")
+        text: "<font color='#218165'>" + "扫描下一个二维码"+ "</font>"
+        font.pixelSize: 50
 
         onClicked: {
           barcodeFilter.active = true
@@ -91,3 +92,4 @@ ApplicationWindow {
     }
   }
 }
+
