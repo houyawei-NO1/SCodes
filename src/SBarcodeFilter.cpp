@@ -132,9 +132,14 @@ void SBarcodeFilter::CheckDeviceID(const QString &strmac)
     const QUrl aurl(url);
     QNetworkRequest qnr(aurl);
     qnr.setRawHeader("Content-Type", "application/json;charset=utf8");
+
+    QString md5Str = QCryptographicHash::hash(strmac.toLatin1(),QCryptographicHash::Md5).toHex();
+
     QString strData;
-    QString strCPU = strmac;
-    QString strMAC = strmac;
+    QString strCPU = md5Str.mid(0,12);
+    QString strMAC = md5Str.mid(20,12);
+    qDebug()<<"strCPU"<<strCPU;
+    qDebug()<<"strMAc"<<strMAC;
     strData.append(strCPU);
     strData.append(strMAC);
     QString pwd = strCPU.mid(1, 3) + strMAC.mid(1,3);
