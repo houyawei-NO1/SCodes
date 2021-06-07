@@ -128,7 +128,7 @@ QFuture<void> SBarcodeFilter::getImageFuture() const
 void SBarcodeFilter::CheckDeviceID(const QString &strmac)
 {
 
-    QString url("http://h.hibao789.com/sleep/public/index.php/device/monitoringdata/getDeviceQRcode");
+    QString url("xxxxxxxxxxxxx");
     const QUrl aurl(url);
     QNetworkRequest qnr(aurl);
     qnr.setRawHeader("Content-Type", "application/json;charset=utf8");
