@@ -30,6 +30,7 @@ public:
 
     QVideoFilterRunnable * createFilterRunnable() override;
     void CheckDeviceID(const QString &strmac);
+    QString MAC;
 
 signals:
     void capturedChanged(const QString &captured);

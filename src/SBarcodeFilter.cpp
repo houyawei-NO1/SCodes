@@ -78,15 +78,19 @@ void SBarcodeFilter::setCaptured(const QString &captured)
     _captured = captured;
     if(_captured.indexOf("MAC")>-1)
         {
-        _captured = _captured.mid(_captured.indexOf("MAC")+3,18);
+        qDebug()<<_captured;
         _captured.remove(":");
         qDebug()<<_captured;
+        _captured = _captured.mid(_captured.indexOf("MAC")+3,12);
+        qDebug()<<_captured;
+        MAC = _captured;
         CheckDeviceID(_captured);
 //        _captured = finishedSlot();
           }
 
     else
         {
+        MAC = "";
         qDebug()<<"未找到MAC"<<_captured;
         _captured="\t未找到MAC\n请扫描盒子背部二维码";
         emit capturedChanged(_captured);
@@ -97,6 +101,7 @@ void SBarcodeFilter::setCaptured(const QString &captured)
 void SBarcodeFilter::clean()
 {
     _captured = "";
+    MAC = "";
     _decoder->clean();
 }
 
@@ -128,7 +133,7 @@ QFuture<void> SBarcodeFilter::getImageFuture() const
 void SBarcodeFilter::CheckDeviceID(const QString &strmac)
 {
 
-    QString url("xxxxxxxxxxxxx");
+    QString url("http://h.hibao789.com/sleep/public/index.php/device/monitoringdata/getDeviceQRcode");
     const QUrl aurl(url);
     QNetworkRequest qnr(aurl);
     qnr.setRawHeader("Content-Type", "application/json;charset=utf8");
@@ -193,13 +198,29 @@ void SBarcodeFilter::finishedSlot(QNetworkReply *reply)
 
                              QString m_strDeviceID = obj.value("deviceId").toString();
                              QString picStream = obj.value("picStream").toString();
-//                             QByteArray tmpBytes = picStream.toLatin1();
-//                             QImage img;
-//                             img.loadFromData(QByteArray::fromBase64(tmpBytes));
-//                             QString path = m_savePath;
-//                             path.append("/profiles/qr.jpg");
-//                             img.save(path);
-                             _captured = "此设备号为：" + m_strDeviceID;
+
+//                             QString  m_savePath = "/sdcard/Android/data/hyw.houyawei.box";
+
+//                             if (QFileInfo::exists(m_savePath))
+//                             {
+//                             qDebug()<<"exists_/sdcard/Android/data/hyw.houyawei.box";
+//                             }
+
+//                             else
+//                             {
+//                             QDir currDir;
+//                             currDir.mkdir(m_savePath);
+//                             }
+
+                            QString path = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
+                             QByteArray tmpBytes = picStream.toLatin1();
+                             QImage img;
+                             img.loadFromData(QByteArray::fromBase64(tmpBytes));
+                             path.append("/qr.jpg");
+                              qDebug()<<"qr.jpg"<<path;
+                             bool suc = img.save(path);
+                             qDebug()<<"suc"<<suc;
+                             _captured =  MAC +"/"+ m_strDeviceID;
                              qDebug()<<"finishedSlot"<<_captured;
                               emit capturedChanged(_captured);
 

@@ -63,6 +63,7 @@ ApplicationWindow {
     onCapturedChanged: {
       active = false
       console.log("captured: " + captured)
+      image.reloadImage()
     }
   }
 
@@ -73,20 +74,47 @@ ApplicationWindow {
       anchors.centerIn: parent
       spacing: 20
 
-      Text {
+
+
+      TextInput {
+        id:text_deviceid
         anchors.horizontalCenter: parent.horizontalCenter
         text:  barcodeFilter.captured
         font.pixelSize: 30
+        readOnly: true
+
       }
+
+      Image {
+            id:image
+            cache: false
+            source: "file:///storage/emulated/0/Pictures/qr.jpg"
+            anchors.horizontalCenter: parent.horizontalCenter
+            function reloadImage() {
+                                var oldSource = source
+                                source = ""
+                                source = oldSource
+                            }//function to refresh the source
+        }
+
 
       Button {
         anchors.horizontalCenter: parent.horizontalCenter
-//        text: qsTr("扫描下一个二维码")
+        text: "<font color='#218165'>" + "复制设备号"+ "</font>"
+        font.pixelSize: 45
+        onClicked: {
+          text_deviceid.select(23,13)
+          text_deviceid.copy()
+        }
+      }
+      Button {
+        anchors.horizontalCenter: parent.horizontalCenter
         text: "<font color='#218165'>" + "扫描下一个二维码"+ "</font>"
-        font.pixelSize: 50
+        font.pixelSize: 45
 
         onClicked: {
           barcodeFilter.active = true
+
         }
       }
     }
